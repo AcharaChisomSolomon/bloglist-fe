@@ -22,10 +22,26 @@ const BlogForm = props => {
             </div>
             <div>
                 author:
-                <input type="text" />
+                <input
+                    type="text"
+                    value={author}
+                    name="Author"
+                    onChange={handleAuthorChange}
+                />
             </div>
-            <div></div>
+            <div>
+                url:
+                <input
+                    type="text"
+                    value={url}
+                    name="URL"
+                    onChange={handleUrlChange}
+                />
+            </div>
             <button type="submit">create</button>
         </form>
     )
 }
+
+
+export default BlogForm

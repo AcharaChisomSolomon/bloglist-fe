@@ -10,6 +10,9 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
 
   useEffect(() => {
@@ -48,6 +51,23 @@ const App = () => {
     }
   }
 
+
+  const handleBlogCreation = async e => {
+    e.preventDefault()
+
+    const newBlog = await blogService.create({
+      title: title,
+      author: author,
+      url: url
+    })
+
+    setBlogs(blogs.concat(newBlog))
+    setAuthor('')
+    setTitle('')
+    setUrl('')
+  }
+
+
   const handleUsernameChange = e => {
     console.log(e.target.value)
     setUsername(e.target.value)
@@ -61,6 +81,21 @@ const App = () => {
   const handleLoggingOut = () => {
     window.localStorage.removeItem("loggedBloglistUser");
     setUser(null)
+  }
+
+  const handleTitleChange = e => {
+    console.log(e.target.value);
+    setTitle(e.target.value)
+  }
+
+  const handleAuthorChange = e => {
+    console.log(e.target.value);
+    setAuthor(e.target.value);
+  }
+
+  const handleUrlChange = e => {
+    console.log(e.target.value);
+    setUrl(e.target.value);
   }
 
 
@@ -78,8 +113,15 @@ const App = () => {
           />
           : <Blogs
               blogs={blogs}
-            name={user.name}
-            handleLoggingOut={handleLoggingOut}
+              name={user.name}
+              handleLoggingOut={handleLoggingOut}
+              handleBlogCreation={handleBlogCreation}
+              title={title}
+              handleTitleChange={handleTitleChange}
+              author={author}
+              handleAuthorChange={handleAuthorChange}
+              url={url}
+              handleUrlChange={handleUrlChange}
             />
       }
     </div>
