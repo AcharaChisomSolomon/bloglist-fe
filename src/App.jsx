@@ -3,6 +3,7 @@ import LoginForm from "./components/LoginForm"
 import Blogs from "./components/Blogs"
 import blogService from './services/blogs'
 import loginService from "./services/login"
+import Notification from "./components/Notification"
 
 
 const App = () => {
@@ -13,6 +14,7 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [notice, setNotice] = useState(null)
 
 
   useEffect(() => {
@@ -48,6 +50,13 @@ const App = () => {
       setUsername('')
     } catch (exception) {
       console.log('wrong Details')
+      setNotice({
+        message: 'wrong username or password',
+        isError: true
+      })
+      setTimeout(() => {
+        setNotice(null)
+      }, 5000)
     }
   }
 
@@ -55,16 +64,34 @@ const App = () => {
   const handleBlogCreation = async e => {
     e.preventDefault()
 
-    const newBlog = await blogService.create({
-      title: title,
-      author: author,
-      url: url
-    })
+    try {
+      const newBlog = await blogService.create({
+        title: title,
+        author: author,
+        url: url,
+      });
 
-    setBlogs(blogs.concat(newBlog))
-    setAuthor('')
-    setTitle('')
-    setUrl('')
+      setBlogs(blogs.concat(newBlog));
+      setAuthor("");
+      setTitle("");
+      setUrl("");
+      setNotice({
+        message: `a new blog ${newBlog.title} by ${newBlog.author} added`,
+        isError: false,
+      });
+      setTimeout(() => {
+        setNotice(null);
+      }, 5000);
+    } catch (exception) {
+      console.log(exception)
+      setNotice({
+        message: exception.response.data.error,
+        isError: true
+      })
+      setTimeout(() => {
+        setNotice(null)
+      }, 5000)
+    }
   }
 
 
@@ -102,6 +129,7 @@ const App = () => {
   return (
     <div>
       <h1>{user ? 'blogs' : 'log in to application'}</h1>
+      <Notification notice={notice} />
       {
         !user
           ? <LoginForm
