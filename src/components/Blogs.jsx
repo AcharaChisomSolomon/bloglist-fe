@@ -1,5 +1,6 @@
 import Blog from "./Blog";
 import BlogForm from "./BlogForm";
+import Togglable from "./Togglable";
 
 const Blogs = props => {
   const {
@@ -7,12 +8,6 @@ const Blogs = props => {
     name,
     handleLoggingOut,
     handleBlogCreation,
-    title,
-    handleTitleChange,
-    author,
-    handleAuthorChange,
-    url,
-    handleUrlChange
   } = props
 
     return (
@@ -22,17 +17,9 @@ const Blogs = props => {
           <button onClick={handleLoggingOut}>logout</button>
         </p>
 
-        <h1>create new</h1>
-
-        <BlogForm
-          handleBlogCreation={handleBlogCreation}
-          title={title}
-          handleTitleChange={handleTitleChange}
-          author={author}
-          handleAuthorChange={handleAuthorChange}
-          url={url}
-          handleUrlChange={handleUrlChange}
-        />
+        <Togglable buttonLabel='new note'>
+          <BlogForm handleBlogCreation={handleBlogCreation}/>
+        </Togglable>
 
         {blogs.map((blog) => (
           <Blog key={blog.id} blog={blog} />

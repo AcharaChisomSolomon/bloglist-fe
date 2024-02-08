@@ -11,9 +11,6 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const [notice, setNotice] = useState(null)
 
 
@@ -61,20 +58,11 @@ const App = () => {
   }
 
 
-  const handleBlogCreation = async e => {
-    e.preventDefault()
-
+  const handleBlogCreation = async newObject => {
     try {
-      const newBlog = await blogService.create({
-        title: title,
-        author: author,
-        url: url,
-      });
-
+      const newBlog = await blogService.create(newObject);
       setBlogs(blogs.concat(newBlog));
-      setAuthor("");
-      setTitle("");
-      setUrl("");
+
       setNotice({
         message: `a new blog ${newBlog.title} by ${newBlog.author} added`,
         isError: false,
@@ -82,8 +70,10 @@ const App = () => {
       setTimeout(() => {
         setNotice(null);
       }, 5000);
+      
     } catch (exception) {
       console.log(exception)
+
       setNotice({
         message: exception.response.data.error,
         isError: true
@@ -91,6 +81,7 @@ const App = () => {
       setTimeout(() => {
         setNotice(null)
       }, 5000)
+
     }
   }
 
@@ -108,21 +99,6 @@ const App = () => {
   const handleLoggingOut = () => {
     window.localStorage.removeItem("loggedBloglistUser");
     setUser(null)
-  }
-
-  const handleTitleChange = e => {
-    console.log(e.target.value);
-    setTitle(e.target.value)
-  }
-
-  const handleAuthorChange = e => {
-    console.log(e.target.value);
-    setAuthor(e.target.value);
-  }
-
-  const handleUrlChange = e => {
-    console.log(e.target.value);
-    setUrl(e.target.value);
   }
 
 
@@ -144,12 +120,6 @@ const App = () => {
               name={user.name}
               handleLoggingOut={handleLoggingOut}
               handleBlogCreation={handleBlogCreation}
-              title={title}
-              handleTitleChange={handleTitleChange}
-              author={author}
-              handleAuthorChange={handleAuthorChange}
-              url={url}
-              handleUrlChange={handleUrlChange}
             />
       }
     </div>
