@@ -8,6 +8,8 @@ const Blogs = props => {
     name,
     handleLoggingOut,
     handleBlogCreation,
+    handleLikeUpdate,
+    handleDeleteBlog
   } = props
 
     return (
@@ -18,11 +20,19 @@ const Blogs = props => {
         </p>
 
         <Togglable buttonLabel='create new blog'>
-          <BlogForm handleBlogCreation={handleBlogCreation}/>
+          <BlogForm
+            handleBlogCreation={handleBlogCreation}
+            handleLikeUpdate={handleLikeUpdate}
+          />
         </Togglable>
 
         {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} />
+          <Blog
+            key={blog.id}
+            blog={blog}
+            handleLikeUpdate={handleLikeUpdate}
+            handleDeleteBlog={handleDeleteBlog}
+          />
         ))}
       </div>
     );

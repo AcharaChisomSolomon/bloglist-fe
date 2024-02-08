@@ -14,6 +14,9 @@ const App = () => {
   const [notice, setNotice] = useState(null)
 
 
+  blogs.sort((a, b) => b.likes - a.likes)
+
+
   useEffect(() => {
     blogService.getAll().then(blogs => setBlogs(blogs))
   }, [])
@@ -61,7 +64,13 @@ const App = () => {
   const handleBlogCreation = async newObject => {
     try {
       const newBlog = await blogService.create(newObject);
-      setBlogs(blogs.concat(newBlog));
+      setBlogs(blogs.concat({
+        ...newBlog,
+        user: {
+          name: user.name
+        }
+      
+      }));
 
       setNotice({
         message: `a new blog ${newBlog.title} by ${newBlog.author} added`,
@@ -70,7 +79,7 @@ const App = () => {
       setTimeout(() => {
         setNotice(null);
       }, 5000);
-      
+
     } catch (exception) {
       console.log(exception)
 
@@ -101,6 +110,43 @@ const App = () => {
     setUser(null)
   }
 
+  const handleLikeUpdate = async id => {
+    const blogToUpdate = blogs.find(blog => blog.id === id)
+    const blogToUpdateDetails = {
+      user: blogToUpdate.user.id,
+      title: blogToUpdate.title,
+      author: blogToUpdate.author,
+      url: blogToUpdate.url,
+      likes: blogToUpdate.likes + 1
+    }
+
+    const updatedBlog = await blogService.update(id, blogToUpdateDetails)
+    setBlogs(blogs.map(blog => blog.id !== id ? blog : {
+      ...updatedBlog,
+      user: {
+        name: blog.user.name
+      }
+    }))
+  }
+
+  const handleDeleteBlog = async id => {
+    try {
+      if (window.confirm('Do you really want to delete this blog?')) {
+        await blogService.remove(id);
+        setBlogs(blogs.filter((blog) => blog.id !== id));
+      }
+    } catch (exception) {
+      console.log(exception)
+      setNotice({
+        message: exception.response.data.error,
+        isError: true
+      })
+      setTimeout(() => {
+        setNotice(null)
+      }, 5000)
+    }
+   }
+
 
   return (
     <div>
@@ -120,6 +166,8 @@ const App = () => {
               name={user.name}
               handleLoggingOut={handleLoggingOut}
               handleBlogCreation={handleBlogCreation}
+              handleLikeUpdate={handleLikeUpdate}
+              handleDeleteBlog={handleDeleteBlog}
             />
       }
     </div>
