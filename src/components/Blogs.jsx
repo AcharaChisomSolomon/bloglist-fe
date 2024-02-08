@@ -17,7 +17,7 @@ const Blogs = props => {
           <button onClick={handleLoggingOut}>logout</button>
         </p>
 
-        <Togglable buttonLabel='new note'>
+        <Togglable buttonLabel='create new blog'>
           <BlogForm handleBlogCreation={handleBlogCreation}/>
         </Togglable>
 
