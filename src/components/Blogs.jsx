@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import Blog from "./Blog";
 import BlogForm from "./BlogForm";
 import Togglable from "./Togglable";
@@ -12,6 +13,13 @@ const Blogs = props => {
     handleDeleteBlog
   } = props
 
+  const blogFormRef = useRef()
+
+  const newHandleBlogCreation = async blog => { 
+    await handleBlogCreation(blog)
+    blogFormRef.current.toggleVisibility()
+  }
+
     return (
       <div>
         <p>
@@ -19,9 +27,9 @@ const Blogs = props => {
           <button onClick={handleLoggingOut}>logout</button>
         </p>
 
-        <Togglable buttonLabel='create new blog'>
+        <Togglable buttonLabel='create new blog' ref={blogFormRef}>
           <BlogForm
-            handleBlogCreation={handleBlogCreation}
+            handleBlogCreation={newHandleBlogCreation}
             handleLikeUpdate={handleLikeUpdate}
           />
         </Togglable>

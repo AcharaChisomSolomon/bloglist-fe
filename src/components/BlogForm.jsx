@@ -18,8 +18,6 @@ const BlogForm = ({ handleBlogCreation }) => {
         setUrl('')
     }
 
-    console.log(title, author, url)
-
     return (
         <div>
             <h1>create new</h1>
